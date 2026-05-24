@@ -1,0 +1,335 @@
+[alias]
+
+    # 🔎 Afficher l'état complet du dépôt (branch, fichiers modifiés, index)
+    st = status
+
+    # 📜 Historique compact et lisible (graph + branches)
+    lg = log --oneline --graph --decorate --all
+
+    # 🌿 Lister les branches locales
+    br = branch
+
+    # 🌿 Lister toutes les branches (locales + distantes) avec tracking
+    brv = branch -vva
+
+    # 🔄 Synchroniser toutes les branches distantes + nettoyer les références supprimées
+    fetchall = fetch --all --prune
+
+    # ⬇️ Récupérer les dernières modifications avec rebase (historique propre)
+    pullr = pull --rebase
+
+    # ⬇️ Récupérer les modifications avec merge classique
+    pullm = pull --no-rebase
+
+    # ⬆️ Pousser la branche courante vers le remote
+    push = push
+
+    # ⬆️ Pousser et définir l’upstream (liaison locale ↔ remote)
+    pushu = push -u origin HEAD
+
+    # 🔀 Rebaser la branche courante sur develop à jour
+    rebd = "!git fetch origin && git rebase origin/develop"
+
+    # 🔀 Rebaser sur la branche locale develop
+    rebl = rebase develop
+
+    # ⚔️ Continuer un rebase après résolution de conflit
+    rbc = rebase --continue
+
+    # ❌ Annuler un rebase en cours
+    rba = rebase --abort
+
+    # 📦 Sauvegarder les modifications en cours (stash)
+    stash = stash
+
+    # 📦 Restaurer le dernier stash
+    pop = stash pop
+
+    # 🧹 Nettoyer complètement le working tree (⚠️ destructif)
+    cleanhard = reset --hard HEAD
+
+    # 🧹 Annuler les modifications sur certains fichiers
+    restore = restore
+
+    # ✏️ Ajouter tous les fichiers + commit
+    ac = "!git add . && git commit"
+
+    # ✏️ Commit avec message court
+    cm = commit -m
+
+    # ✏️ Modifier le dernier commit (message ou contenu)
+    amend = commit --amend
+
+    # 🍒 Appliquer un commit spécifique (cherry-pick)
+    cp = cherry-pick
+
+    # 🍒 Continuer cherry-pick après conflit
+    cpc = cherry-pick --continue
+
+    # ❌ Supprimer une branche locale
+    del = branch -d
+
+    # ❌ Supprimer une branche locale forcée
+    delf = branch -D
+
+    # 🔄 Workflow complet de synchronisation + rebase + push (très pratique)
+    sync = "!git fetch --all --prune && git pull --rebase && git push"
+
+    # 🔄 Synchronisation propre avec develop (feature branch typique)
+    syncdev = "!git fetch --all --prune && git rebase origin/develop"
+
+    # 🔍 Voir les commits présents localement mais pas sur le remote
+    ahead = log origin/HEAD..HEAD --oneline
+
+    # 🔍 Voir les commits présents sur le remote mais pas en local
+    behind = log HEAD..origin/HEAD --oneline
+
+    ############################################################
+    # 🔎 DIAGNOSTIC & VISUALISATION
+    ############################################################
+
+    # Affiche un status compact avec la branche et le tracking (plus lisible que git status)
+    pst = !git status -sb
+
+    # Historique visuel complet avec branches et décorations
+    plog = !git log --oneline --graph --decorate --all
+
+    # Affiche uniquement le dernier commit (utile pour vérifier rapidement)
+    plast = !git log -1 HEAD
+
+    # Historique détaillé avec auteur et date relative (très lisible)
+    plogp = !git log --graph --pretty=format:'%Cred%h%Creset - %C(yellow)%d%Creset %s %Cgreen(%cr) %Cblue<%an>%Creset'
+
+    ############################################################
+    # 🌿 BRANCHES
+    ############################################################
+
+    # Liste des branches locales et distantes triées par activité récente
+    pbranches = !git branch -a --sort=-committerdate
+
+    # Changer de branche rapidement
+    pco = !git checkout
+
+    # Créer une branche et se positionner dessus
+    pcob = !git checkout -b
+
+    # Revenir à la branche précédente
+    pback = !git checkout -
+
+    # Supprimer une branche localement et sur le remote
+    pnuke = "!f() { git branch -D $1 && git push origin --delete $1; }; f"
+
+    ############################################################
+    # 🔄 FETCH / PULL / PUSH
+    ############################################################
+
+    # Synchroniser tous les remotes et nettoyer les branches supprimées
+    pfetch = !git fetch --all --prune
+
+    # Pull avec rebase (historique linéaire)
+    ppull = !git pull --rebase
+
+    # Push classique
+    ppush = !git push
+
+    # Push + upstream automatique
+    ppushu = !git push -u origin HEAD
+
+    ############################################################
+    # 🔀 REBASE / WORKFLOW
+    ############################################################
+
+    # Rebase sur develop distant (usage feature branch standard)
+    prebd = !git fetch origin && git rebase origin/develop
+
+    # Rebase interactif pour nettoyer ses commits avant MR
+    prebi = !git rebase -i develop
+
+    # Continuer un rebase après conflit
+    prbc = !git rebase --continue
+
+    # Annuler un rebase
+    prba = !git rebase --abort
+
+    ############################################################
+    # 📦 STASH (beaucoup d’optimisation ici)
+    ############################################################
+
+    # Sauvegarder un travail avec message explicite
+    psave = !git stash push -m
+
+    # Sauvegarder en incluant les fichiers non suivis
+    psaveu = !git stash push -u -m
+
+    # Lister les stashs
+    pstl = !git stash list
+
+    # Afficher le contenu du dernier stash
+    pshowstash = !git stash show -p
+
+    # Appliquer un stash sans le supprimer
+    pstashapply = !git stash apply
+
+    # Supprimer un stash
+    pstashdrop = !git stash drop
+
+    ############################################################
+    # ✏️ COMMIT / UNDO (très utiles)
+    ############################################################
+
+    # Commit rapide avec message
+    pcm = !git commit -m
+
+    # Commit WIP (work in progress rapide)
+    pwip = "!git add -A && git commit -m 'WIP'"
+
+    # Modifier le dernier commit
+    pamend = !git commit --amend
+
+    # Annuler le dernier commit en gardant les fichiers
+    pundo = !git reset --soft HEAD~1
+
+    # Retirer un fichier de l’index (unstage)
+    punstage = !git reset HEAD --
+
+    ############################################################
+    # 🔍 DIFF / DEBUG
+    ############################################################
+
+    # Voir les modifications non stagées
+    pdf = !git diff
+
+    # Voir les modifications déjà stagées
+    pdfs = !git diff --staged
+
+    ############################################################
+    # 🧹 NETTOYAGE
+    ############################################################
+
+    # Supprimer toutes les branches déjà mergées (sauf main/master)
+    pcleanup = "!git branch --merged | grep -v '\\*\\|main\\|master' | xargs -n 1 git branch -d"
+
+    # Reset complet (⚠️ destructif)
+    phard = !git reset --hard HEAD
+
+    ############################################################
+    # 🔎 RECHERCHE / AUDIT
+    ############################################################
+
+    # Rechercher une chaîne dans tous les commits (puissant)
+    pgrepall = "!git rev-list --all | xargs git grep -F"
+
+    # Voir les contributeurs par nombre de commits
+    ppeeps = !git shortlog -n -e -s
+
+    ############################################################
+    # 🧠 MÉTA / UTILS
+    ############################################################
+
+    # Lister tous les alias définis
+    palias = "!git config -l | grep alias | cut -c 7-"
+
+    # Afficher l'identité Git courante
+    pwhoami = "!git config user.name && git config user.email"
+
+    ############################################################
+    # ⚡ WORKFLOW COMPLET
+    ############################################################
+
+    # Synchronisation complète (fetch + rebase + push)
+    psync = "!git fetch --all --prune && git pull --rebase && git push"
+
+    # Synchroniser avec develop proprement
+    psyncdev = "!git fetch --all --prune && git rebase origin/develop"
+
+    ############################################################
+    # 🔐 SAFE REBASE (sécurisé avec rollback automatique)
+    ############################################################
+
+    # Rebase sécurisé :
+    # 1. stash auto (avec message)
+    # 2. fetch latest
+    # 3. rebase sur develop
+    # 4. si succès : stash restore
+    # 5. si échec : abort + restore
+    psaferebasedevelop = "!f() { \
+    echo '🔒 Sauvegarde du travail en cours...'; \
+    git stash push -u -m 'auto-safe-rebase' >/dev/null; \
+    echo '🔄 Fetch origin...'; \
+    git fetch origin; \
+    echo '🔀 Rebase sur origin/develop...'; \
+    if git rebase origin/develop; then \
+        echo '✅ Rebase OK'; \
+        git stash pop >/dev/null 2>&1 || true; \
+    else \
+        echo '❌ Conflit détecté → rollback'; \
+        git rebase --abort; \
+        git stash pop >/dev/null 2>&1 || true; \
+        echo '⚠️ Rebase annulé, état restauré'; \
+    fi; \
+    }; f"
+
+    # Rebase sécurisé sur un branche en paramètre :
+    # 1. stash auto (avec message)
+    # 2. fetch latest
+    # 3. rebase sur develop
+    # 4. si succès : stash restore
+    # 5. si échec : abort + restore
+    psaferebase = "!f() { \
+    echo '🔒 Sauvegarde du travail en cours...'; \
+    git stash push -u -m 'auto-safe-rebase' >/dev/null; \
+    echo '🔄 Fetch origin...'; \
+    git fetch origin; \
+    echo '🔀 Rebase sur origin/$1...'; \
+    if git rebase origin/$1; then \
+        echo '✅ Rebase OK'; \
+        git stash pop >/dev/null 2>&1 || true; \
+    else \
+        echo '❌ Conflit détecté → rollback'; \
+        git rebase --abort; \
+        git stash pop >/dev/null 2>&1 || true; \
+        echo '⚠️ Rebase annulé, état restauré'; \
+    fi; \
+    }; f"
+
+    # Rebase sécurisé interactif
+    psaferebasei = "!f() { \
+    git stash push -u -m 'auto-safe-rebase'; \
+    git fetch origin; \
+    if git rebase origin/develop; then \
+        git stash pop; \
+        echo '✅ Rebase terminé'; \
+    else \
+        echo '❌ Conflit détecté'; \
+        echo '👉 Résous les conflits puis fais : git rebase --continue'; \
+    fi; \
+    }; f"
+
+    # Synchroniser avec develop proprement
+    psafesync = "!git fetch --all --prune && git psaferebase"
+
+    # Synchroniser avec develop proprement et push
+    psafesyncpush = "!git fetch --all --prune && git psaferebase && git push"
+
+    # Rebase sécurisé sur un branche en paramètre :
+    # 1. stash auto (avec message)
+    # 2. fetch latest
+    # 3. rebase sur develop
+    # 4. si succès : stash restore
+    # 5. si échec : abort + restore
+    psaferebasei = "!f() { \
+    echo '🔒 Sauvegarde du travail en cours...'; \
+    git stash push -u -m 'auto-safe-rebase' ; \
+    echo '🔄 Fetch origin...'; \
+    git fetch origin; \
+    echo '🔀 Rebase sur origin/$1...'; \
+    if git rebase origin/$1; then \
+        echo '✅ Rebase OK'; \
+        git stash pop; \
+    else \
+        echo '❌ Conflit détecté → rollback'; \
+        git rebase --abort; \
+        git stash pop; \
+        echo '⚠️ Rebase annulé, état restauré'; \
+    fi; \
+    }; f"
