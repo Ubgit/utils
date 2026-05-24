@@ -95,8 +95,8 @@
     # Historique visuel complet avec branches et décorations
     plog = !git log --oneline --graph --decorate --all
 
-    # Affiche uniquement le dernier commit (utile pour vérifier rapidement)
-    plast = !git log -1 HEAD
+    # Affiche uniquement les $1 commit (utile pour vérifier rapidement)
+    plast = "!f() { git log -$1 HEAD; }; f"    
 
     # Historique détaillé avec auteur et date relative (très lisible)
     plogp = !git log --graph --pretty=format:'%Cred%h%Creset - %C(yellow)%d%Creset %s %Cgreen(%cr) %Cblue<%an>%Creset'
@@ -293,25 +293,6 @@
     fi; \
     }; f"
 
-    # Rebase sécurisé interactif
-    psaferebasei = "!f() { \
-    git stash push -u -m 'auto-safe-rebase'; \
-    git fetch origin; \
-    if git rebase origin/develop; then \
-        git stash pop; \
-        echo '✅ Rebase terminé'; \
-    else \
-        echo '❌ Conflit détecté'; \
-        echo '👉 Résous les conflits puis fais : git rebase --continue'; \
-    fi; \
-    }; f"
-
-    # Synchroniser avec develop proprement
-    psafesync = "!git fetch --all --prune && git psaferebase"
-
-    # Synchroniser avec develop proprement et push
-    psafesyncpush = "!git fetch --all --prune && git psaferebase && git push"
-
     # Rebase sécurisé sur un branche en paramètre :
     # 1. stash auto (avec message)
     # 2. fetch latest
@@ -334,3 +315,9 @@
         echo '⚠️ Rebase annulé, état restauré'; \
     fi; \
     }; f"
+
+    # Synchroniser avec develop proprement
+    psafesync = "!git fetch --all --prune && git psaferebase"
+
+    # Synchroniser avec develop proprement et push
+    psafesyncpush = "!git fetch --all --prune && git psaferebase && git push"
