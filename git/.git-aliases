@@ -1,4 +1,5 @@
 [alias]
+    # Alias et adaptation des alias de Joël Hanson https://joel-hanson.github.io/posts/05-useful-git-aliases-for-a-productive-workflow/
 
     # 🔎 Afficher l'état complet du dépôt (branch, fichiers modifiés, index)
     st = status
