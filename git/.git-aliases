@@ -117,6 +117,9 @@
     # Revenir à la branche précédente
     pback = !git checkout -
 
+    # Supprimer une branche localement
+    pdelb = "!f() { git branch -D $1; }; f"
+
     # Supprimer une branche localement et sur le remote
     pnuke = "!f() { git branch -D $1 && git push origin --delete $1; }; f"
 
@@ -212,6 +215,12 @@
 
     # Reset complet (⚠️ destructif)
     phard = !git reset --hard HEAD
+
+    # ⚠️ Reset total sur develop (perte des commits locaux)
+    presetdev = "!git fetch origin && git reset --hard origin/develop"
+
+    # 🔐 Reset sécurisé sur develop (avec sauvegarde préalable)
+    psafedev = "!git stash push -u -m 'backup-before-reset' && git fetch origin && git reset --hard origin/develop"
 
     ############################################################
     # 🔎 RECHERCHE / AUDIT
