@@ -102,11 +102,64 @@
     plogp = !git log --graph --pretty=format:'%Cred%h%Creset - %C(yellow)%d%Creset %s %Cgreen(%cr) %Cblue<%an>%Creset'
 
     ############################################################
+    # 📄 DIFF fichiers vs branche distante
+    ############################################################
+
+    # Comparer un fichier courant avec la version dans origin/develop
+    pdiffdev = "!f() { git diff origin/develop -- \"$1\"; }; f"
+
+    # Comparer un fichier courant ($1) avec la version dans la branch distante ($2) - usage : pdiffbranch <fichier> <branche-distante> - exemple : git pdiffbranch origin/develop
+    pdiffbranch = "!f() { git diff -U0 $2 -- \"$1\" | grep -Ev '^(--- a/|\\+\\+\\+ b/)'; }; f"
+
+    # 📄 Liste des fichiers modifiés vs une branche donnée ($1) - usage : git pldiff <branche-distante> - exemple : git pldiff origin/develop
+    pldiff = "!f() { git diff --name-status $1...HEAD; }; f"
+
+    # 📄 Diff ultra compact (uniquement lignes modifiées)
+    pdifflines = "!f() { git diff -U0 -- \"$1\"; }; f"
+
+    # 📄 Diff brut (lignes ajoutées/supprimées uniquement)
+    pdiffraw = "!f() { git diff -U0 -- \"$1\" | grep '^[+-]' | grep -Ev '^(--- a/|\\+\\+\\+ b/)'; }; f"
+
+    ############################################################
+    # 🔍 REVIEW MR LOCAL (aperçu complet avant push)
+    ############################################################
+
+    # Affiche par rapport à la branche $1 - exemple : git pmr origin/develop
+    # - liste des fichiers modifiés
+    # - stats (+/- lignes)
+    # - diff compact (sans contexte inutile)
+    pmr = "!f() { \
+    echo '📂 Fichiers modifiés :' ; \
+    git diff --name-status $1...HEAD ; \
+    echo '' ; \
+    echo '📊 Statistiques :' ; \
+    git diff --stat $1...HEAD ; \
+    }; f"
+
+    # Affiche par rapport à la branche $1 - exemple : git pmr origin/develop
+    # - liste des fichiers modifiés
+    # - stats (+/- lignes)
+    # - diff compact (sans contexte inutile)
+    pmrd = "!f() { \
+    echo '📂 Fichiers modifiés :' ; \
+    git diff --name-status $1...HEAD ; \
+    echo '' ; \
+    echo '📊 Statistiques :' ; \
+    git diff --stat $1...HEAD ; \
+    echo '' ; \
+    echo '🔎 Diff compact :' ; \
+    git diff -U0 $1...HEAD ; \
+    }; f"
+
+    ############################################################
     # 🌿 BRANCHES
     ############################################################
 
+    # Liste des branches distantes triées par activité récente
+    pbranchesr = !git branch -r --sort=-committerdate
+
     # Liste des branches locales et distantes triées par activité récente
-    pbranches = !git branch -a --sort=-committerdate
+    pbranchesa = !git branch -a --sort=-committerdate
 
     # Changer de branche rapidement
     pco = !git checkout
@@ -282,7 +335,7 @@
     # Rebase sécurisé sur un branche en paramètre :
     # 1. stash auto (avec message)
     # 2. fetch latest
-    # 3. rebase sur develop
+    # 3. rebase sur branch $1
     # 4. si succès : stash restore
     # 5. si échec : abort + restore
     psaferebase = "!f() { \
