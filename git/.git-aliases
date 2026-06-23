@@ -1,4 +1,63 @@
 [alias]
+    ############################################################
+    # TOP USED
+    ############################################################
+
+    # 🌿 Lister toutes les branches (locales + distantes) avec tracking
+    brv = branch -vva
+
+    # 🔄 Synchroniser toutes les branches distantes + nettoyer les références supprimées
+    fetchall = fetch --all --prune
+
+    # Switch
+    sw = switch
+
+    # Branch
+    br = branch
+
+    # ❌ Supprimer une branche locale
+    db = branch -d
+
+    # Liste des branches distantes triées par activité récente
+    pbranchesr = !git branch -r --sort=-committerdate
+
+    # Liste des branches locales et distantes triées par activité récente
+    pbranchesa = !git branch -a --sort=-committerdate
+
+    # Rebase sécurisé sur un branche en paramètre :
+    # 1. stash auto (avec message)
+    # 2. fetch latest
+    # 3. rebase sur branch $1
+    # 4. si succès : stash restore
+    # 5. si échec : abort + restore
+    psaferebase = "!f() { \
+    echo '🔒 Sauvegarde du travail en cours...'; \
+    git stash push -u -m 'auto-safe-rebase' >/dev/null; \
+    echo '🔄 Fetch origin...'; \
+    git fetch origin; \
+    echo '🔀 Rebase sur $1...'; \
+    if git rebase $1; then \
+        echo '✅ Rebase OK'; \
+        git stash pop >/dev/null 2>&1 || true; \
+    else \
+        echo '❌ Conflit détecté → rollback'; \
+        git rebase --abort; \
+        git stash pop >/dev/null 2>&1 || true; \
+        echo '⚠️ Rebase annulé, état restauré'; \
+    fi; \
+    }; f"
+
+    ############################################################
+    # PUSH
+    ############################################################
+
+    # Push -u la branche locale en paramètre $1 sur le distant (origin)
+    ppu = "!f() { git push -u origin $1; }; f"
+
+    ############################################################
+    # OTHERS
+    ############################################################
+
     # Alias et adaptation des alias de Joël Hanson https://joel-hanson.github.io/posts/05-useful-git-aliases-for-a-productive-workflow/
 
     # 🔎 Afficher l'état complet du dépôt (branch, fichiers modifiés, index)
@@ -66,9 +125,6 @@
 
     # 🍒 Continuer cherry-pick après conflit
     cpc = cherry-pick --continue
-
-    # ❌ Supprimer une branche locale
-    del = branch -d
 
     # ❌ Supprimer une branche locale forcée
     delf = branch -D
@@ -154,12 +210,6 @@
     ############################################################
     # 🌿 BRANCHES
     ############################################################
-
-    # Liste des branches distantes triées par activité récente
-    pbranchesr = !git branch -r --sort=-committerdate
-
-    # Liste des branches locales et distantes triées par activité récente
-    pbranchesa = !git branch -a --sort=-committerdate
 
     # Changer de branche rapidement
     pco = !git checkout
@@ -322,29 +372,6 @@
     git fetch origin; \
     echo '🔀 Rebase sur origin/develop...'; \
     if git rebase origin/develop; then \
-        echo '✅ Rebase OK'; \
-        git stash pop >/dev/null 2>&1 || true; \
-    else \
-        echo '❌ Conflit détecté → rollback'; \
-        git rebase --abort; \
-        git stash pop >/dev/null 2>&1 || true; \
-        echo '⚠️ Rebase annulé, état restauré'; \
-    fi; \
-    }; f"
-
-    # Rebase sécurisé sur un branche en paramètre :
-    # 1. stash auto (avec message)
-    # 2. fetch latest
-    # 3. rebase sur branch $1
-    # 4. si succès : stash restore
-    # 5. si échec : abort + restore
-    psaferebase = "!f() { \
-    echo '🔒 Sauvegarde du travail en cours...'; \
-    git stash push -u -m 'auto-safe-rebase' >/dev/null; \
-    echo '🔄 Fetch origin...'; \
-    git fetch origin; \
-    echo '🔀 Rebase sur origin/$1...'; \
-    if git rebase origin/$1; then \
         echo '✅ Rebase OK'; \
         git stash pop >/dev/null 2>&1 || true; \
     else \
